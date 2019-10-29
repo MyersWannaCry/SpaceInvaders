@@ -68,8 +68,12 @@ while run:
     keys = pygame.key.get_pressed()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            run = False
-
+            pygame.quit()
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                x -= speed
+            elif event.key == pygame.K_RIGHT:
+                x += speed
 
     def shot():
         for bullet in bullets:
@@ -82,13 +86,13 @@ while run:
             if len(bullets) < 1:
                 bullets.append(pulya(round(x + width // 2), round(y + height // 2), 5, (255, 0, 0)))
 
-
+    shot()
+    draw_window()
+'''
     if keys[pygame.K_LEFT] and x > 45:
         x -= speed
     if keys[pygame.K_RIGHT] and x < 1200:
         x += speed
-    shot()
-    draw_window()
+'''
 
-pygame.quit()
 
