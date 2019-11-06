@@ -9,11 +9,13 @@ x = 640  # корды нашей ракеты
 y = 600
 width = 40
 height = 60
+left=False
+right=False
 ##########################
 class Bullet:
     Bullets = []
     def __init__(self, display, x, y, sprite, directionY = -10, directionX = 0):
-        self.sprite = sprite
+        self.sprite = pygame.image.load('bullet.png')
         self.display = display
         self.directionY = directionY  
         self.directionX = directionX  
@@ -21,7 +23,7 @@ class Bullet:
         display.blit(sprite, self.instance)  
 class Player:
     def __init__(self, display, x, y, sprite):
-        self.sprite = sprite
+        self.sprite = pygame.image.load('M.png')
         self.display = display
         self.instance = self.sprite.get_rect(topleft = (x, y))
         display.blit(sprite, self.instance)  
@@ -31,13 +33,15 @@ class Player:
 class EnemyLevelOne(Player):
     def __init__(self, *args, **kwargs):
         Player.__init__(self, *args, **kwargs)
+        self.sprite = pygame.image.load('vrag1.png')
     def shoot(self, sprite):
         Bullet.Bullets.append(Bullet(self.display, self.instance.centerx - 2, self.instance.bottomleft[1], sprite, 10))
 
 class EnemyLevelTwo(EnemyLevelOne):
     def __init__(self, *args, **kwargs):
         EnemyLevelOne.__init__(self, *args, **kwargs)
-        self.is_active = False  
+        self.is_active = False
+        self.sprite = pygame.image.load('vrag2.png')
     def shoot(self, sprite):
         Bullet.Bullets.append(Bullet(self.display, self.instance.centerx - 2, self.instance.bottomleft[1],  sprite, 10, -1))
         Bullet.Bullets.append(Bullet(self.display, self.instance.centerx - 2, self.instance.bottomleft[1],  sprite, 10, 1))
@@ -45,6 +49,7 @@ class EnemyLevelTwo(EnemyLevelOne):
 class EnemyLevelThree(EnemyLevelTwo):
     def __init__(self, *args, **kwargs):
         EnemyLevelTwo.__init__(self, *args, **kwargs)
+        self.sprite = pygame.image.load('vrag3.png')
     def shoot(self, sprite):
         Bullet.Bullets.append(Bullet(self.display, self.instance.centerx - 2, self.instance.bottomleft[1], sprite, 10))
         Bullet.Bullets.append(Bullet(self.display, self.instance.centerx - 2, self.instance.bottomleft[1], sprite, 10, -1))
@@ -64,7 +69,8 @@ def rotate(instance, angle):
     x, y = instance.instance.center
     instance.instance = instance.sprite.get_rect()
     instance.instance.center = (x, y)
-#############################
+
+
 player = Player(display, x, y, pygame.Surface((width, height)))
 
 invaders = [[], [], []]
@@ -85,15 +91,18 @@ while run:
             run = False
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT and x < 50:
-                pass
+                left=True
+                right=False
             elif event.key == pygame.K_RIGHT and x < 1200:
-                pass
+                right=True
+                left=False
             if event.key == pygame.K_UP and len(Bullet.Bullets) < 10:
                  player.shoot(pygame.Surface((5, 5)))
 #            if event.key == pygame.K_DOWN:  Vlad
         elif event.type == pygame.KEYUP:
             pass
-
+    while left==True:
+        Player.sprite=pygame.image.load('L1.png')
     for bullet in Bullet.Bullets:
         if bullet.instance.y > 0 and 0 < bullet.instance.x < 1280:
             bullet.instance.y += bullet.directionY
@@ -106,7 +115,7 @@ while run:
             for elem in row:
                 if bullet.instance.colliderect(elem.instance):
                     row.remove(elem)
-                    Bullet.Bullets.remove(bullet)
+                    Bullet.Bullets.remove(bullet)  # ВОТ ТУТ МНОГО БАГОВ
 
     for row in invaders:
         if row[-1] == None:
@@ -120,7 +129,7 @@ while run:
         player.instance.x += 15
     display.blit(player.sprite, player.instance)
     pygame.display.update()
-    clock.tick(30)
+    clock.tick(60)
 
 
 pygame.quit()
@@ -130,15 +139,12 @@ pygame.quit()
 =В процессе=
 1) Стрельба врагов
 2) Попадание во врагов
-
 =Изменения=:
 1) Добалена фунция вращения объектов на экране pygame.transform.rotate() 
 2) Добавлен класс босса
-
 =ЧтоНужноСделать=
 1) Маштабировать картинки врагов(github.com/MyersWannaCry/SpaceInvaders)
 2) Логика босса
-
 =Аргументация=
 1)Нет ни логики, ни взаимодействия с врагами и боссом, так как мы это пока
 не реализовываем, сам факт подстановки спрайта и возможность определения
