@@ -155,25 +155,25 @@ while run:
         #---------------------------------------------------------Igoryasik
                     points+=1
         # ________________________________________________________Diana movement
+    for row in invaders:
+        for elem in row:
+            if row[row.index(elem)] != None:
+                if row[row.index(elem)].instance.x >= 1240:
+                    move = True
+                    down = True
+                if row[row.index(elem)].instance.x < 0:
+                    move = False
+                    down = True
+                if move:
+                    row[row.index(elem)].instance.x -= 5
+                if move == False:
+                    row[row.index(elem)].instance.x += 5
+    if down:
         for row in invaders:
             for elem in row:
                 if row[row.index(elem)] != None:
-                    if row[row.index(elem)].instance.x >= 1240:
-                        move = True
-                        down = True
-                    if row[row.index(elem)].instance.x < 0:
-                        move = False
-                        down = True
-                    if move:
-                        row[row.index(elem)].instance.x -= 5
-                    if move == False:
-                        row[row.index(elem)].instance.x += 5
-        if down:
-            for row in invaders:
-                for elem in row:
-                    if row[row.index(elem)] != None:
-                        row[row.index(elem)].instance.y += 15
-            down = False
+                    row[row.index(elem)].instance.y += 15
+        down = False
     # ________________________________________________________
 
     if keys[pygame.K_LEFT] and player.instance.x > 0:
