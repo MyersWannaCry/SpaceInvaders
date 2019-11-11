@@ -6,6 +6,12 @@ pygame.display.set_caption('Space invaders')
 background = pygame.image.load('background_space.png')
 pygame.mixer.music.load('Megalovania.mp3')
 pygame.mixer.music.play(-1)
+smallfont = pygame.font.SysFont("verdana",25)
+white = (255,255,255)
+points=0
+def score(score):
+    text=smallfont.render("Score:" +str(score), True, white)
+    display.blit(text,[1150,0])
 ##########################
 class Bullet:
     Bullets = []
@@ -144,6 +150,7 @@ while run:
                         elem.instance):
                     row[row.index(elem)] = None
                     Bullet.Player.remove(bullet)
+                    points+=1
         # ________________________________________________________Diana movement
         for row in invaders:
             for elem in row:
@@ -174,6 +181,7 @@ while run:
         invaders[0][0].shoot()
         invaders[1][4].shoot()
         invaders[2][10].shoot()
+    score(points)
     display.blit(player.sprite, player.instance)
     pygame.display.update()
     clock.tick(60)
