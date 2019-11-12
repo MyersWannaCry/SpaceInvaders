@@ -1,4 +1,5 @@
 import pygame
+import time
 
 pygame.init()
 display = pygame.display.set_mode((1280, 670))
@@ -10,9 +11,13 @@ pygame.mixer.music.play(-1)
 smallfont = pygame.font.SysFont("verdana",25)
 white = (255,255,255)
 points=0
+start_time=time.time()
 def score(score):
     text=smallfont.render("Score:" +str(score), True, white)
-    display.blit(text,[1150,0])
+    display.blit(text,[1095,0])
+def timer(timer):
+    text=smallfont.render("Time:" +str(timer), True, white)
+    display.blit(text,[1095,30])
 #-----------------------------------------------
 ##########################
 class Bullet:
@@ -153,7 +158,7 @@ while run:
                     row[row.index(elem)] = None
                     Bullet.Player.remove(bullet)
         #---------------------------------------------------------Igoryasik
-                    points+=1
+                    points+=100
         # ________________________________________________________Diana movement
     for row in invaders:
         for elem in row:
@@ -186,6 +191,8 @@ while run:
         invaders[2][10].shoot()
    #-----------------------------------------Igoryasik
     score(points)
+    timer(str(round(time.time()-start_time))+" sec")
+    
     #----------------------------------------- 
     display.blit(player.sprite, player.instance)
     pygame.display.update()
