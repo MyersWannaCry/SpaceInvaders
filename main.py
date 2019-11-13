@@ -103,10 +103,8 @@ for i in range(11):
 del current_x
 
 clock = pygame.time.Clock()
-#____________________________Diana,movement
 down = False
 move = False
-#____________________________
 run = True
 while run:
     display.blit(background,(0,0))
@@ -159,7 +157,6 @@ while run:
                     Bullet.Player.remove(bullet)
         #---------------------------------------------------------Igoryasik
                     points+=100
-        # ________________________________________________________Diana movement
     for row in invaders:
         for elem in row:
             if row[row.index(elem)] != None:
@@ -173,6 +170,10 @@ while run:
                     row[row.index(elem)].instance.x -= 5
                 if move == False:
                     row[row.index(elem)].instance.x += 5
+#---------------------------------------------------------------------------------------------------------------------------D
+                if row[row.index(elem)].instance.colliderect(player.instance) or row[row.index(elem)].instance.y >=600 :
+                    run= False
+#---------------------------------------------------------------------------------------------------------------------------
     if down:
         for row in invaders:
             for elem in row:
