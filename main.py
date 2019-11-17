@@ -189,6 +189,8 @@ while run:
                     invader.is_active = True
         for elem in row:
             if elem != None:
+                if elem.instance.colliderect(player.instance) or elem.instance.y>=670  :
+                    run=False
                 if elem.instance.x >= 1280 - elem.instance.width:
                     move = True
                     down = True
@@ -232,6 +234,8 @@ while run:
             boss.shoot_time += randint(1, 2)
         if boss.hp ==0:
             winscreen()
+        if boss.instance.y>=640-boss.instance.height or boss.instance.colliderect(player.instance):
+            run = False
 
     for bullet in Bullet.Bullets + Bullet.Player:
         if boss.is_active:
