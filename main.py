@@ -6,6 +6,10 @@ pygame.init()
 display = pygame.display.set_mode((1280, 670))
 pygame.display.set_caption('Space invaders')
 background = pygame.image.load('background_space.png')
+
+winscreen = pygame.image.load('winscreen.jpg')
+lossscreen = pygame.image.load('lossscreen.jpg')
+
 pygame.mixer.music.load('Megalovania.mp3')
 pygame.mixer.music.play(-1)
 
@@ -15,8 +19,6 @@ enemy1_sprite = pygame.image.load('vrag1.png')
 enemy2_sprite = pygame.image.load('vrag2.png')
 enemy3_sprite = pygame.image.load('vrag3.png')
 boss_sprite = pygame.image.load('boss.png')
-winscreen_sprite = pygame.image.load('winscreen.jpg')
-lossscreen_sprite = pygame.image.load('lossscreen.jpg')
 
 
 smallfont = pygame.font.SysFont("verdana",25)
@@ -33,25 +35,8 @@ def timer(timer):
 def boss_hp(boss_hp):
     text=smallfont.render("Boss hp:" +str(boss_hp), True, white)
     display.blit(text,[1050,60])
+    
 
-def winscreen():
-    while run == True:
-        display.fill((0,0,0))
-        winscreen=Winscreen(display, 0, 0, winscreen_sprite)
-        start_button = pygame.draw.rect(display,(0,244,0),(300,550,200,60));
-        quit_button = pygame.draw.rect(display,(244,0,0),(800,550,200,60));
-        pygame.display.update()
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if pygame.mouse.get_pos()[0] >= 300 and pygame.mouse.get_pos()[1] >= 550:
-                if pygame.mouse.get_pos()[0] <= 500 and pygame.mouse.get_pos()[1] <= 710:
-                    print("TBD")
-    pygame.display.flip()
-    boss.is_active=False
-    player.cleanup(3000,3000)
-    for bullet in Bullet.Bullets:
-        bullet.cleanup(3000,3000)
-    
-    
 class Bullet:
     Bullets = []
     Player = []
@@ -62,22 +47,25 @@ class Bullet:
         self.directionX = directionX
         self.instance = self.sprite.get_rect(topleft=(x, y))
         display.blit(self.sprite, self.instance)
-    def cleanup(self,goX,goY):
-        self.instance.x = goX
-        self.instance.y = goY
+        
+    def cleanup(self):
+        self.instance.x = 3000
+        self.instance.y = 3000
 
 class Player:
     def __init__(self, display, x, y, sprite):
         self.sprite = sprite
         self.display = display
         self.instance = self.sprite.get_rect(center=(x, y))
+        self.win = False
+        self.loss = False
         display.blit(self.sprite, self.instance)
     def shoot(self):
         Bullet.Player.append(Bullet(self.display, self.instance.centerx - 5, self.instance.y, bullet_sprite))
         
-    def cleanup(self,goX,goY):
-        self.instance.x = goX
-        self.instance.y = goY
+    def cleanup(self):
+        self.instance.x = 3000
+        self.instance.y = 3000
 
 
 class EnemyLevelOne(Player):
@@ -85,6 +73,7 @@ class EnemyLevelOne(Player):
         Player.__init__(self, display, x, y, sprite)
         self.instance = self.sprite.get_rect(topleft=(x, y))
         self.shoot_time = randint(5, 10)
+        
     def shoot(self):
         Bullet.Bullets.append(Bullet(self.display, self.instance.centerx - 6, self.instance.bottomleft[1], bullet_sprite, 5))
 
@@ -92,6 +81,7 @@ class EnemyLevelTwo(EnemyLevelOne):
     def __init__(self, *args, **kwargs):
         EnemyLevelOne.__init__(self, *args, **kwargs)
         self.is_active = False
+        
     def shoot(self):
         Bullet.Bullets.append(Bullet(self.display, self.instance.centerx - 5, self.instance.bottomleft[1], bullet_sprite, 5, -1))
         Bullet.Bullets.append(Bullet(self.display, self.instance.centerx - 5, self.instance.bottomleft[1], bullet_sprite, 5, 1))
@@ -100,6 +90,7 @@ class EnemyLevelTwo(EnemyLevelOne):
 class EnemyLevelThree(EnemyLevelTwo):
     def __init__(self, *args, **kwargs):
         EnemyLevelTwo.__init__(self, *args, **kwargs)
+        
     def shoot(self):
         Bullet.Bullets.append(Bullet(self.display, self.instance.centerx - 6.5, self.instance.bottomleft[1], bullet_sprite, 5))
         Bullet.Bullets.append(
@@ -117,6 +108,7 @@ class Boss(EnemyLevelTwo):
         self.shoot_time = randint(1, 2)
         self.move = True
         self.down = False
+        
     def shoot(self):
         Bullet.Bullets.append(
             Bullet(self.display, self.instance.centerx - 6.5, self.instance.bottomleft[1], bullet_sprite, 10, -2))
@@ -127,16 +119,10 @@ class Boss(EnemyLevelTwo):
             Bullet(self.display, self.instance.centerx - 6.5, self.instance.bottomleft[1], bullet_sprite, 10, 1))
         Bullet.Bullets.append(
             Bullet(self.display, self.instance.centerx - 6.5, self.instance.bottomleft[1], bullet_sprite, 10, 2))
-
-
-
-class Winscreen():
-    def __init__(self, display, x, y, sprite):
-        self.sprite = winscreen_sprite
-        self.instance = self.sprite.get_rect(topleft=(0, 0))
-        self.display = display
-        display.blit(self.sprite, self.instance)
         
+    def cleanup(self):
+        self.instance.x=3000
+        self.instance.y=3000
 
 player = Player(display, 640, 600, player_sprite)
 boss = Boss(display, 545, 10, boss_sprite)
@@ -156,7 +142,44 @@ move = False
 new_time = True
 run = True
 while run:
-    display.blit(background,(0,0))
+    if player.win != True and player.loss != True:
+        display.blit(background,(0,0))
+        score(points)
+        timer(str(round(time()-start_time))+" sec")
+        boss_hp(boss.hp)
+    elif player.win == True:
+        display.blit(winscreen,(0,0))
+        player.cleanup()
+        boss.cleanup()
+        invaders=[]
+        for bullet in Bullet.Bullets:
+            bullet.cleanup()
+        start_button = pygame.draw.rect(display,(0,244,0),(300,550,200,60));
+        quit_button = pygame.draw.rect(display,(244,0,0),(800,550,200,60));
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if pygame.mouse.get_pos()[0] >= 300 and pygame.mouse.get_pos()[1] >= 550:
+                if pygame.mouse.get_pos()[0] <= 500 and pygame.mouse.get_pos()[1] <= 710:
+                    print("TBD")
+            if pygame.mouse.get_pos()[0] >= 800 and pygame.mouse.get_pos()[1] >= 550:
+                if pygame.mouse.get_pos()[0] <= 1000 and pygame.mouse.get_pos()[1] <= 710:
+                    run = False
+    elif player.loss == True:
+        display.blit(lossscreen,(0,0))
+        player.cleanup()
+        boss.cleanup()
+        invaders=[]
+        for bullet in Bullet.Bullets:
+            bullet.cleanup()
+        start_button = pygame.draw.rect(display,(0,244,0),(300,550,200,60));
+        quit_button = pygame.draw.rect(display,(244,0,0),(800,550,200,60));
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if pygame.mouse.get_pos()[0] >= 300 and pygame.mouse.get_pos()[1] >= 550:
+                if pygame.mouse.get_pos()[0] <= 500 and pygame.mouse.get_pos()[1] <= 710:
+                    print("TBD")
+            if pygame.mouse.get_pos()[0] >= 800 and pygame.mouse.get_pos()[1] >= 550:
+                if pygame.mouse.get_pos()[0] <= 1000 and pygame.mouse.get_pos()[1] <= 710:
+                    run = False
+
     keys = pygame.key.get_pressed()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -231,7 +254,7 @@ while run:
             boss.shoot()
             boss.shoot_time += randint(1, 2)
         if boss.hp ==0:
-            winscreen()
+            player.win = True
 
     for bullet in Bullet.Bullets + Bullet.Player:
         if boss.is_active:
@@ -249,7 +272,7 @@ while run:
                 Bullet.Bullets.remove(bullet)
         display.blit(bullet.sprite, bullet.instance)
         if bullet not in Bullet.Player and bullet.instance.colliderect(player.instance):
-            run = False
+            player.loss = True
         for row in invaders:
             for elem in row:
                 if bullet in Bullet.Player and elem != None and bullet.instance.colliderect(elem.instance):
@@ -261,12 +284,12 @@ while run:
         player.instance.x -= 10
     if keys[pygame.K_RIGHT] and player.instance.x < 1280 - player.instance.width:
         player.instance.x += 10
-    score(points)
-    timer(str(round(time()-start_time))+" sec")
-    boss_hp(boss.hp)
+
     display.blit(player.sprite, player.instance)
     pygame.display.update()
     clock.tick(60)
-        
+
+
+
 
 pygame.quit()
