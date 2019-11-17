@@ -8,14 +8,12 @@ pygame.display.set_caption('Space invaders')
 background = pygame.image.load('background_space.png')
 pygame.mixer.music.load('Megalovania.mp3')
 pygame.mixer.music.play(-1)
-#__________________________________________________________Vazgen
 bullet_sprite = pygame.image.load('bullet.png')
 player_sprite = pygame.image.load('ship.png')
 enemy1_sprite = pygame.image.load('vrag1.png')
 enemy2_sprite = pygame.image.load('vrag2.png')
 enemy3_sprite = pygame.image.load('vrag3.png')
 boss_sprite = pygame.image.load('boss.png')
-#__________________________________________________________Vazgen
 smallfont = pygame.font.SysFont("verdana",25)
 white = (255,255,255)
 points=0
@@ -27,7 +25,6 @@ def timer(timer):
     text=smallfont.render("Time:" +str(timer), True, white)
     display.blit(text,[1095,30])
 ##########################
-#__________________________________________________________Vazgen
 class Bullet:
     Bullets = []
     Player = []
@@ -97,7 +94,6 @@ class Boss(EnemyLevelTwo):
             Bullet(self.display, self.instance.centerx - 6.5, self.instance.bottomleft[1], bullet_sprite, 10, 1))
         Bullet.Bullets.append(
             Bullet(self.display, self.instance.centerx - 6.5, self.instance.bottomleft[1], bullet_sprite, 10, 2))
-#__________________________________________________________Vazgen
 #############################
 player = Player(display, 640, 600, player_sprite)
 boss = Boss(display, 545, 10, boss_sprite)
@@ -160,18 +156,15 @@ while run:
                     elem.instance.x -= 5
                 else:
                     elem.instance.x += 5
-#__________________________________________________________Vazgen
                 if int(time() - start_time) % elem.shoot_time == 0 and int(time() - start_time) != 0 and (invaders.index(row) == 0 or elem.is_active):
                     elem.shoot()
                     elem.shoot_time += randint(5, 10)
-#__________________________________________________________Vazgen
             if down:
                 for row in invaders:
                     for elem in row:
                         if elem != None:
                             elem.instance.y += 15
                 down = False
-#__________________________________________________________Vazgen
     display.blit(boss.sprite, boss.instance)
     if boss.is_active:
         if boss.instance.x >= 1280 - boss.instance.width:
@@ -190,7 +183,6 @@ while run:
         if int(time() - boss_time) % boss.shoot_time == 0 and int(time() - boss_time) != 0:
             boss.shoot()
             boss.shoot_time += randint(1, 2)
-#__________________________________________________________Vazgen
     for bullet in Bullet.Bullets + Bullet.Player:
         if bullet.instance.y > 0 and bullet.instance.bottomleft[1] < 1280:
             bullet.instance.y += bullet.directionY
