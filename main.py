@@ -62,7 +62,7 @@ class Bullet:
         
     def cleanup(self):
         self.instance.x = 3000
-        self.instance.y = 3000
+        self.instance.y = 0
 
 class Player:
     def __init__(self, display, x, y, sprite):
@@ -77,7 +77,7 @@ class Player:
         
     def cleanup(self):
         self.instance.x = 3000
-        self.instance.y = 3000
+        self.instance.y = 0
 
 
 class EnemyLevelOne(Player):
@@ -134,7 +134,7 @@ class Boss(EnemyLevelTwo):
         
     def cleanup(self):
         self.instance.x=3000
-        self.instance.y=3000
+        self.instance.y=0
 
 player = Player(display, 640, 600, player_sprite)
 boss = Boss(display, 545, 10, boss_sprite)
@@ -158,9 +158,6 @@ run = True
 while run:
     if player.win != True and player.loss != True:
         display.blit(background,(0,0))
-#        score(points)
-#        timer(str(round(time()-start_time))+" sec")
-#        boss_hp(boss.hp)
     elif player.win == True:
         display.blit(winscreen,(0,0))
         player.cleanup()
@@ -230,8 +227,8 @@ while run:
                     invader.is_active = True
         for elem in row:
             if elem != None:
-                if elem.instance.colliderect(player.instance) or elem.instance.y>=670  :
-                    run=False
+                if elem.instance.colliderect(player.instance) or elem.instance.y>=670:
+                    player.loss = True
                 if elem.instance.x >= 1280 - elem.instance.width:
                     move = True
                     down = True
@@ -274,11 +271,9 @@ while run:
             boss.shoot()
             boss.shoot_time += randint(1, 2)
         if boss.hp ==0:
-
             player.win = True
-            winscreen()
         if boss.instance.y>=640-boss.instance.height or boss.instance.colliderect(player.instance):
-            run = False
+            player.loss = True
 
 
     for bullet in Bullet.Bullets + Bullet.Player:
