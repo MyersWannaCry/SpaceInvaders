@@ -44,7 +44,7 @@ def winscreen():
         if event.type == pygame.MOUSEBUTTONDOWN:
             if pygame.mouse.get_pos()[0] >= 300 and pygame.mouse.get_pos()[1] >= 550:
                 if pygame.mouse.get_pos()[0] <= 500 and pygame.mouse.get_pos()[1] <= 710:
-                    print("SLAVA UKRAINE")
+                    print("TBD")
     pygame.display.flip()
     boss.is_active=False
     player.cleanup(3000,3000)
