@@ -1,5 +1,5 @@
 import pygame
-from time import time
+from time import *
 from random import randint
 
 pygame.init()
@@ -8,18 +8,22 @@ pygame.display.set_caption('Space invaders')
 background = pygame.image.load('background_space.png')
 pygame.mixer.music.load('Megalovania.mp3')
 pygame.mixer.music.play(-1)
-#__________________________________________________________Vazgen
+
 bullet_sprite = pygame.image.load('bullet.png')
 player_sprite = pygame.image.load('ship.png')
 enemy1_sprite = pygame.image.load('vrag1.png')
 enemy2_sprite = pygame.image.load('vrag2.png')
 enemy3_sprite = pygame.image.load('vrag3.png')
 boss_sprite = pygame.image.load('boss.png')
-#__________________________________________________________Vazgen
+winscreen_sprite = pygame.image.load('winscreen.jpg')
+lossscreen_sprite = pygame.image.load('lossscreen.jpg')
+
+
 smallfont = pygame.font.SysFont("verdana",25)
 white = (255,255,255)
 points=0
 start_time=time()
+
 def score(score):
     text=smallfont.render("Score:" +str(score), True, white)
     display.blit(text,[1095,0])
@@ -29,12 +33,28 @@ def timer(timer):
 def boss_hp(boss_hp):
     text=smallfont.render("Boss hp:" +str(boss_hp), True, white)
     display.blit(text,[1050,60])
-##########################
-#__________________________________________________________Vazgen
+
+def winscreen():
+    while run == True:
+        display.fill((0,0,0))
+        winscreen=Winscreen(display, 0, 0, winscreen_sprite)
+        start_button = pygame.draw.rect(display,(0,244,0),(300,550,200,60));
+        quit_button = pygame.draw.rect(display,(244,0,0),(800,550,200,60));
+        pygame.display.update()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if pygame.mouse.get_pos()[0] >= 300 and pygame.mouse.get_pos()[1] >= 550:
+                if pygame.mouse.get_pos()[0] <= 500 and pygame.mouse.get_pos()[1] <= 710:
+                    print("SLAVA UKRAINE")
+    pygame.display.flip()
+    boss.is_active=False
+    player.cleanup(3000,3000)
+    for bullet in Bullet.Bullets:
+        bullet.cleanup(3000,3000)
+    
+    
 class Bullet:
     Bullets = []
     Player = []
-
     def __init__(self, display, x, y, sprite, directionY=-5, directionX=0):
         self.sprite = sprite
         self.display = display
@@ -42,6 +62,9 @@ class Bullet:
         self.directionX = directionX
         self.instance = self.sprite.get_rect(topleft=(x, y))
         display.blit(self.sprite, self.instance)
+    def cleanup(self,goX,goY):
+        self.instance.x = goX
+        self.instance.y = goY
 
 class Player:
     def __init__(self, display, x, y, sprite):
@@ -51,6 +74,10 @@ class Player:
         display.blit(self.sprite, self.instance)
     def shoot(self):
         Bullet.Player.append(Bullet(self.display, self.instance.centerx - 5, self.instance.y, bullet_sprite))
+        
+    def cleanup(self,goX,goY):
+        self.instance.x = goX
+        self.instance.y = goY
 
 
 class EnemyLevelOne(Player):
@@ -100,8 +127,17 @@ class Boss(EnemyLevelTwo):
             Bullet(self.display, self.instance.centerx - 6.5, self.instance.bottomleft[1], bullet_sprite, 10, 1))
         Bullet.Bullets.append(
             Bullet(self.display, self.instance.centerx - 6.5, self.instance.bottomleft[1], bullet_sprite, 10, 2))
-#__________________________________________________________Vazgen
-#############################
+
+
+
+class Winscreen():
+    def __init__(self, display, x, y, sprite):
+        self.sprite = winscreen_sprite
+        self.instance = self.sprite.get_rect(topleft=(0, 0))
+        self.display = display
+        display.blit(self.sprite, self.instance)
+        
+
 player = Player(display, 640, 600, player_sprite)
 boss = Boss(display, 545, 10, boss_sprite)
 
@@ -163,18 +199,18 @@ while run:
                     elem.instance.x -= 5
                 else:
                     elem.instance.x += 5
-#__________________________________________________________Vazgen
+
                 if int(time() - start_time) % elem.shoot_time == 0 and int(time() - start_time) != 0 and (invaders.index(row) == 0 or elem.is_active):
                     elem.shoot()
                     elem.shoot_time += randint(5, 10)
-#__________________________________________________________Vazgen
+
             if down:
                 for row in invaders:
                     for elem in row:
                         if elem != None:
                             elem.instance.y += 15
                 down = False
-#__________________________________________________________Vazgen
+
 
     if boss.is_active:
         display.blit(boss.sprite, boss.instance)
@@ -195,11 +231,11 @@ while run:
             boss.shoot()
             boss.shoot_time += randint(1, 2)
         if bullet.instance.colliderect(boss.instance) and bullet in Bullet.Player:
-            boss.hp -= 10
+            boss.hp -= 100
             Bullet.Player.remove(bullet)
         if boss.hp ==0:
-            boss.remove()
-#__________________________________________________________Vazgen
+            winscreen()
+
     for bullet in Bullet.Bullets + Bullet.Player:
         if bullet.instance.y > 0 and bullet.instance.bottomleft[1] < 1280:
             bullet.instance.y += bullet.directionY
@@ -229,5 +265,6 @@ while run:
     display.blit(player.sprite, player.instance)
     pygame.display.update()
     clock.tick(60)
+        
 
 pygame.quit()
