@@ -22,16 +22,28 @@ boss_sprite = pygame.image.load('boss.png')
 
 
 smallfont = pygame.font.SysFont("verdana",25)
-white = (255,255,255)
+bigfont = pygame.font.SysFont("verdana",40)
+white = (255, 255, 255)
+black = (0, 0, 0)
 points=0
 start_time=time()
 
+def retry():
+    text=bigfont.render("Retry" , True, black)
+    display.blit(text,[345,550])
+    
+def leave():
+    text=bigfont.render("Exit" , True, black)
+    display.blit(text,[863,550])
+    
 def score(score):
     text=smallfont.render("Score:" +str(score), True, white)
     display.blit(text,[1095,0])
+    
 def timer(timer):
     text=smallfont.render("Time:" +str(timer), True, white)
     display.blit(text,[1095,30])
+    
 def boss_hp(boss_hp):
     text=smallfont.render("Boss hp:" +str(boss_hp), True, white)
     display.blit(text,[1050,60])
@@ -134,6 +146,7 @@ for i in range(11):
     invaders[1].append(EnemyLevelTwo(display, current_x, 75, enemy2_sprite))
     invaders[0].append(EnemyLevelOne(display, current_x, 145, enemy1_sprite))
     current_x += 45
+    
 del current_x
 
 clock = pygame.time.Clock()
@@ -141,12 +154,13 @@ down = False
 move = False
 new_time = True
 run = True
+
 while run:
     if player.win != True and player.loss != True:
         display.blit(background,(0,0))
-        score(points)
-        timer(str(round(time()-start_time))+" sec")
-        boss_hp(boss.hp)
+#        score(points)
+#        timer(str(round(time()-start_time))+" sec")
+#        boss_hp(boss.hp)
     elif player.win == True:
         display.blit(winscreen,(0,0))
         player.cleanup()
@@ -156,6 +170,8 @@ while run:
             bullet.cleanup()
         start_button = pygame.draw.rect(display,(0,244,0),(300,550,200,60));
         quit_button = pygame.draw.rect(display,(244,0,0),(800,550,200,60));
+        retry()
+        leave()
         if event.type == pygame.MOUSEBUTTONDOWN:
             if pygame.mouse.get_pos()[0] >= 300 and pygame.mouse.get_pos()[1] >= 550:
                 if pygame.mouse.get_pos()[0] <= 500 and pygame.mouse.get_pos()[1] <= 710:
@@ -172,6 +188,8 @@ while run:
             bullet.cleanup()
         start_button = pygame.draw.rect(display,(0,244,0),(300,550,200,60));
         quit_button = pygame.draw.rect(display,(244,0,0),(800,550,200,60));
+        retry()
+        leave()
         if event.type == pygame.MOUSEBUTTONDOWN:
             if pygame.mouse.get_pos()[0] >= 300 and pygame.mouse.get_pos()[1] >= 550:
                 if pygame.mouse.get_pos()[0] <= 500 and pygame.mouse.get_pos()[1] <= 710:
@@ -285,11 +303,13 @@ while run:
     if keys[pygame.K_RIGHT] and player.instance.x < 1280 - player.instance.width:
         player.instance.x += 10
 
+    if player.win != True and player.loss != True:
+        score(points)
+        timer(str(round(time()-start_time))+" sec")
+        boss_hp(boss.hp)
+        pygame.display.update()
     display.blit(player.sprite, player.instance)
     pygame.display.update()
     clock.tick(60)
-
-
-
 
 pygame.quit()
