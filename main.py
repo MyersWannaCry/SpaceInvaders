@@ -230,13 +230,15 @@ while run:
         if int(time() - boss_time) % boss.shoot_time == 0 and int(time() - boss_time) != 0:
             boss.shoot()
             boss.shoot_time += randint(1, 2)
-        if bullet.instance.colliderect(boss.instance) and bullet in Bullet.Player:
-            boss.hp -= 100
-            Bullet.Player.remove(bullet)
         if boss.hp ==0:
             winscreen()
 
     for bullet in Bullet.Bullets + Bullet.Player:
+        if boss.is_active:
+            if bullet.instance.colliderect(boss.instance) and bullet in Bullet.Player:
+                boss.hp -= 10
+                Bullet.Player.remove(bullet)
+
         if bullet.instance.y > 0 and bullet.instance.bottomleft[1] < 1280:
             bullet.instance.y += bullet.directionY
             bullet.instance.x += bullet.directionX
