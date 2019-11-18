@@ -316,9 +316,8 @@ while run:
         score(points)
         timer(str(round(time()-start_time))+" sec")
         boss_hp(boss.hp)
-        pygame.display.update()
     display.blit(player.sprite, player.instance)
     pygame.display.update()
-    clock.tick(90)
+    clock.tick(120)
 
 pygame.quit()
