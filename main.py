@@ -50,6 +50,9 @@ def timer(timer):
 def boss_hp(boss_hp):
     text=smallfont.render("Boss hp:" +str(boss_hp), True, white)
     display.blit(text,[1050,60])
+def player_hp(player_hp):
+    text = smallfont.render("Player hp:" +str(player_hp), True, white)
+    display.blit(text,[1050,90])
     
 
 class Bullet:
@@ -71,6 +74,7 @@ class Player:
         self.instance = self.sprite.get_rect(center=(x, y))
         self.win = False
         self.loss = False
+        self.hp = 3
         display.blit(self.sprite, self.instance)
     def shoot(self):
         Bullet.Player.append(Bullet(self.display, self.instance.centerx, self.instance.y, bullet_sprite_2))
@@ -299,7 +303,11 @@ while run:
                 Bullet.Bullets.remove(bullet)
         display.blit(bullet.sprite, bullet.instance)
         if bullet not in Bullet.Player and bullet.instance.colliderect(player.instance):
-            player.loss = True
+            player.hp-=1
+            Bullet.Bullets.remove(bullet)
+            if player.hp==0:
+                player.loss = True
+       
         for row in invaders:
             for elem in row:
                 if bullet in Bullet.Player and elem != None and bullet.instance.colliderect(elem.instance):
@@ -316,6 +324,7 @@ while run:
         score(points)
         timer(str(round(time()-start_time))+" sec")
         boss_hp(boss.hp)
+        player_hp(player.hp)
     display.blit(player.sprite, player.instance)
     pygame.display.update()
     clock.tick(120)
