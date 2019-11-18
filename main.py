@@ -59,10 +59,7 @@ class Bullet:
         self.directionX = directionX
         self.instance = self.sprite.get_rect(topleft=(x, y))
         display.blit(self.sprite, self.instance)
-        
-    def cleanup(self):
-        self.instance.x = 3000
-        self.instance.y = 0
+    
 
 class Player:
     def __init__(self, display, x, y, sprite):
@@ -162,9 +159,8 @@ while run:
         display.blit(winscreen,(0,0))
         player.cleanup()
         boss.cleanup()
-        invaders=[]
-        for bullet in Bullet.Bullets:
-            bullet.cleanup()
+        invaders = []
+        Bullet.Bullets = []
         start_button = pygame.draw.rect(display,(0,244,0),(300,550,200,60));
         quit_button = pygame.draw.rect(display,(244,0,0),(800,550,200,60));
         retry()
@@ -181,8 +177,7 @@ while run:
         player.cleanup()
         boss.cleanup()
         invaders=[]
-        for bullet in Bullet.Bullets:
-            bullet.cleanup()
+        Bullet.Bullets = []
         start_button = pygame.draw.rect(display,(0,244,0),(300,550,200,60));
         quit_button = pygame.draw.rect(display,(244,0,0),(800,550,200,60));
         retry()
