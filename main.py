@@ -13,7 +13,10 @@ lossscreen = pygame.image.load('lossscreen.jpg')
 pygame.mixer.music.load('Megalovania.mp3')
 pygame.mixer.music.play(-1)
 
-bullet_sprite = pygame.image.load('bullet.png')
+bullet_sprite_1 = pygame.image.load('bullet_1.png')
+bullet_sprite_2 = pygame.image.load('bullet_2.png')
+bullet_sprite_3 = pygame.image.load('bullet_in.png')
+bullet_sprite_4 = pygame.image.load('Bullet_boss.png')
 player_sprite = pygame.image.load('ship.png')
 enemy1_sprite = pygame.image.load('vrag1.png')
 enemy2_sprite = pygame.image.load('vrag2.png')
@@ -47,6 +50,9 @@ def timer(timer):
 def boss_hp(boss_hp):
     text=smallfont.render("Boss hp:" +str(boss_hp), True, white)
     display.blit(text,[1050,60])
+def player_hp(player_hp):
+    text = smallfont.render("Player hp:" +str(player_hp), True, white)
+    display.blit(text,[1050,90])
     
 
 class Bullet:
@@ -57,7 +63,7 @@ class Bullet:
         self.display = display
         self.directionY = directionY
         self.directionX = directionX
-        self.instance = self.sprite.get_rect(topleft=(x, y))
+        self.instance = self.sprite.get_rect(center=(x, y))
         display.blit(self.sprite, self.instance)
     
 
@@ -68,9 +74,10 @@ class Player:
         self.instance = self.sprite.get_rect(center=(x, y))
         self.win = False
         self.loss = False
+        self.hp = 3
         display.blit(self.sprite, self.instance)
     def shoot(self):
-        Bullet.Player.append(Bullet(self.display, self.instance.centerx - 5, self.instance.y, bullet_sprite))
+        Bullet.Player.append(Bullet(self.display, self.instance.centerx, self.instance.y, bullet_sprite_2))
         
     def cleanup(self):
         self.instance.x = 3000
@@ -84,7 +91,7 @@ class EnemyLevelOne(Player):
         self.shoot_time = randint(5, 10)
         
     def shoot(self):
-        Bullet.Bullets.append(Bullet(self.display, self.instance.centerx - 6, self.instance.bottomleft[1], bullet_sprite, 5))
+        Bullet.Bullets.append(Bullet(self.display, self.instance.centerx, self.instance.bottomleft[1], bullet_sprite_3, 5))
 
 class EnemyLevelTwo(EnemyLevelOne):
     def __init__(self, *args, **kwargs):
@@ -92,8 +99,8 @@ class EnemyLevelTwo(EnemyLevelOne):
         self.is_active = False
         
     def shoot(self):
-        Bullet.Bullets.append(Bullet(self.display, self.instance.centerx - 5, self.instance.bottomleft[1], bullet_sprite, 5, -1))
-        Bullet.Bullets.append(Bullet(self.display, self.instance.centerx - 5, self.instance.bottomleft[1], bullet_sprite, 5, 1))
+        Bullet.Bullets.append(Bullet(self.display, self.instance.centerx, self.instance.bottomleft[1], bullet_sprite_3, 5, -1))
+        Bullet.Bullets.append(Bullet(self.display, self.instance.centerx, self.instance.bottomleft[1], bullet_sprite_3, 5, 1))
 
 
 class EnemyLevelThree(EnemyLevelTwo):
@@ -101,11 +108,11 @@ class EnemyLevelThree(EnemyLevelTwo):
         EnemyLevelTwo.__init__(self, *args, **kwargs)
         
     def shoot(self):
-        Bullet.Bullets.append(Bullet(self.display, self.instance.centerx - 6.5, self.instance.bottomleft[1], bullet_sprite, 5))
+        Bullet.Bullets.append(Bullet(self.display, self.instance.centerx, self.instance.bottomleft[1], bullet_sprite_3, 5))
         Bullet.Bullets.append(
-            Bullet(self.display, self.instance.centerx - 6.5, self.instance.bottomleft[1], bullet_sprite, 5, -1))
+            Bullet(self.display, self.instance.centerx, self.instance.bottomleft[1], bullet_sprite_3, 5, -1))
         Bullet.Bullets.append(
-            Bullet(self.display, self.instance.centerx - 6.5, self.instance.bottomleft[1], bullet_sprite, 5, 1))
+            Bullet(self.display, self.instance.centerx, self.instance.bottomleft[1], bullet_sprite_3, 5, 1))
 
 
 class Boss(EnemyLevelTwo):
@@ -115,26 +122,28 @@ class Boss(EnemyLevelTwo):
         self.instance = self.sprite.get_rect(topleft=(x, y))
         self.hp = 100
         self.shoot_time = randint(1, 2)
+        self.solo_movement = False
+        self.moving = False
         self.move = True
         self.down = False
         
     def shoot(self):
         Bullet.Bullets.append(
-            Bullet(self.display, self.instance.centerx - 6.5, self.instance.bottomleft[1], bullet_sprite, 10, -2))
+            Bullet(self.display, self.instance.centerx, self.instance.bottomleft[1], bullet_sprite_4, 10, -2))
         Bullet.Bullets.append(
-            Bullet(self.display, self.instance.centerx - 6.5, self.instance.bottomleft[1], bullet_sprite, 10, -1))
-        Bullet.Bullets.append(Bullet(self.display, self.instance.centerx - 6.5, self.instance.bottomleft[1], bullet_sprite, 10))
+            Bullet(self.display, self.instance.centerx, self.instance.bottomleft[1], bullet_sprite_4, 10, -1))
+        Bullet.Bullets.append(Bullet(self.display, self.instance.centerx, self.instance.bottomleft[1], bullet_sprite_4, 10))
         Bullet.Bullets.append(
-            Bullet(self.display, self.instance.centerx - 6.5, self.instance.bottomleft[1], bullet_sprite, 10, 1))
+            Bullet(self.display, self.instance.centerx, self.instance.bottomleft[1], bullet_sprite_4, 10, 1))
         Bullet.Bullets.append(
-            Bullet(self.display, self.instance.centerx - 6.5, self.instance.bottomleft[1], bullet_sprite, 10, 2))
+            Bullet(self.display, self.instance.centerx, self.instance.bottomleft[1], bullet_sprite_4, 10, 2))
         
     def cleanup(self):
         self.instance.x=3000
         self.instance.y=0
 
 player = Player(display, 640, 600, player_sprite)
-boss = Boss(display, 545, 10, boss_sprite)
+boss = Boss(display, 545, -200, boss_sprite)
 
 invaders = [[], [], []]
 current_x = 5
@@ -199,7 +208,7 @@ while run:
                 pass
             elif event.key == pygame.K_RIGHT:
                 pass
-            if event.key == pygame.K_UP and len(Bullet.Player) < 5:
+            if not boss.solo_movement and event.key == pygame.K_UP and len(Bullet.Player) < 5:
                 player.shoot()
         elif event.type == pygame.KEYUP:
             pass
@@ -213,9 +222,7 @@ while run:
         if not row:
             invaders.remove(row)
             if len(invaders) == 0 and new_time:
-                boss.is_active = True
-                boss_time = time()
-                new_time = False
+                boss.solo_movement = True
         if None in row and invaders.index(row) != len(invaders) - 1:
             for invader in invaders[invaders.index(row) + 1]:
                 if invader is not None:
@@ -245,10 +252,19 @@ while run:
                         if elem != None:
                             elem.instance.y += 15
                 down = False
-
-
+                
+    display.blit(boss.sprite, boss.instance)
+    if boss.solo_movement and boss.instance.y < 10:
+        boss.instance.y += 1
+        boss.moving = True
+    else:
+        boss.solo_movement = False
+        if boss.moving:
+            boss_time = time()
+            boss.is_active = True
+            new_time = True
+            boss.moving = False
     if boss.is_active:
-        display.blit(boss.sprite, boss.instance)
         if boss.instance.x >= 1280 - boss.instance.width:
             boss.move = True
             boss.down = True
@@ -287,7 +303,11 @@ while run:
                 Bullet.Bullets.remove(bullet)
         display.blit(bullet.sprite, bullet.instance)
         if bullet not in Bullet.Player and bullet.instance.colliderect(player.instance):
-            player.loss = True
+            player.hp-=1
+            Bullet.Bullets.remove(bullet)
+            if player.hp==0:
+                player.loss = True
+       
         for row in invaders:
             for elem in row:
                 if bullet in Bullet.Player and elem != None and bullet.instance.colliderect(elem.instance):
@@ -295,18 +315,18 @@ while run:
                     Bullet.Player.remove(bullet)
                     points+=100
 
-    if keys[pygame.K_LEFT] and player.instance.x > 0:
+    if not boss.solo_movement and keys[pygame.K_LEFT] and player.instance.x > 0:
         player.instance.x -= 10
-    if keys[pygame.K_RIGHT] and player.instance.x < 1280 - player.instance.width:
+    if not boss.solo_movement and keys[pygame.K_RIGHT] and player.instance.x < 1280 - player.instance.width:
         player.instance.x += 10
 
     if player.win != True and player.loss != True:
         score(points)
         timer(str(round(time()-start_time))+" sec")
         boss_hp(boss.hp)
-        pygame.display.update()
+        player_hp(player.hp)
     display.blit(player.sprite, player.instance)
     pygame.display.update()
-    clock.tick(60)
+    clock.tick(120)
 
 pygame.quit()
