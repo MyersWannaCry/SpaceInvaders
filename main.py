@@ -228,6 +228,7 @@ bonus = Bonus(display, randint(50, 1230), pygame.Surface((10, 10)))
 while main:
     while menu:
         display.blit(menu_img,(0,0))
+        pygame.display.flip()
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pos()[0] >= 12 and pygame.mouse.get_pos()[1] >= 166:
