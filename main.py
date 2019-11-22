@@ -228,8 +228,8 @@ bonus = Bonus(display, randint(50, 1230), pygame.Surface((10, 10)))
 while main:
     while menu:
         display.blit(menu_img,(0,0))
-        for event1 in pygame.event.get():
-            if event1.type == pygame.MOUSEBUTTONDOWN:
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pos()[0] >= 12 and pygame.mouse.get_pos()[1] >= 166:
                     if pygame.mouse.get_pos()[0] <= 227 and pygame.mouse.get_pos()[1] <= 241:
                         menu=False
@@ -237,7 +237,7 @@ while main:
                 if pygame.mouse.get_pos()[0] >= 166 and pygame.mouse.get_pos()[1] >= 550:
                     if pygame.mouse.get_pos()[0] <= 241 and pygame.mouse.get_pos()[1] <= 710:
                         print("GG ne budet")
-            if event1.type == pygame.QUIT:
+            if event.type == pygame.QUIT:
                 run = False
     while run:
         if player.win != True and player.loss != True:
