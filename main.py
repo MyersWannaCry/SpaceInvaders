@@ -14,6 +14,8 @@ menu_img = pygame.image.load('menu.jpg')
 pygame.mixer.music.load('Megalovania.mp3')
 pygame.mixer.music.play(-1)
 
+a=pygame.event.get()
+
 bullet_sprite_1 = pygame.image.load('bullet_1.png')
 bullet_sprite_2 = pygame.image.load('bullet_2.png')
 bullet_sprite_3 = pygame.image.load('bullet_in.png')
@@ -39,8 +41,8 @@ black = (0, 0, 0)
 points=0
 start_time=time()
 
-def retry():
-    text=bigfont.render("Retry" , True, black)
+def to_menu():
+    text=bigfont.render("Menu" , True, black)
     display.blit(text,[345,550])
     
 def leave():
@@ -233,14 +235,33 @@ while main:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pos()[0] >= 12 and pygame.mouse.get_pos()[1] >= 166:
                     if pygame.mouse.get_pos()[0] <= 227 and pygame.mouse.get_pos()[1] <= 241:
-                        menu=False
-                        run=True
-                if pygame.mouse.get_pos()[0] >= 166 and pygame.mouse.get_pos()[1] >= 550:
-                    if pygame.mouse.get_pos()[0] <= 241 and pygame.mouse.get_pos()[1] <= 710:
-                        print("GG ne budet")
-            if event.type == pygame.QUIT:
-                run = False
+                        menu = False
+                        run = True
+                if pygame.mouse.get_pos()[0] >= 227 and pygame.mouse.get_pos()[1] >= 166:
+                    if pygame.mouse.get_pos()[0] <= 442 and pygame.mouse.get_pos()[1] <= 241:
+                        menu = False
+                        run = True
+                if pygame.mouse.get_pos()[0] >= 442 and pygame.mouse.get_pos()[1] >= 166:
+                    if pygame.mouse.get_pos()[0] <= 657 and pygame.mouse.get_pos()[1] <= 241:
+                        menu = False
+                        run = True
+                if pygame.mouse.get_pos()[0] >= 12 and pygame.mouse.get_pos()[1] >= 285:
+                    if pygame.mouse.get_pos()[0] <= 355 and pygame.mouse.get_pos()[1] <= 360:
+                        print("TBD 1")
+                if pygame.mouse.get_pos()[0] >= 12 and pygame.mouse.get_pos()[1] >= 391:
+                    if pygame.mouse.get_pos()[0] <= 210 and pygame.mouse.get_pos()[1] <= 466:
+                        print("TBD 2")
+                if pygame.mouse.get_pos()[0] >= 12 and pygame.mouse.get_pos()[1] >= 497:
+                    if pygame.mouse.get_pos()[0] <= 180 and pygame.mouse.get_pos()[1] <= 572:
+                        run = False
+                        main = False
+                        menu = False                        
+                if event.type == pygame.QUIT:
+                    run = False
+                    main = False
+                    menu = False
     while run:
+        pygame.display.flip()
         if player.win != True and player.loss != True:
             display.blit(background,(0,0))
         elif player.win == True:
@@ -251,18 +272,22 @@ while main:
             Bullet.Bullets = []
             start_button = pygame.draw.rect(display,(0,244,0),(300,550,200,60));
             quit_button = pygame.draw.rect(display,(244,0,0),(800,550,200,60));
-            retry()
+            to_menu()
             leave()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if pygame.mouse.get_pos()[0] >= 300 and pygame.mouse.get_pos()[1] >= 550:
-                    if pygame.mouse.get_pos()[0] <= 500 and pygame.mouse.get_pos()[1] <= 710:
-                        print("TBD")
-                if pygame.mouse.get_pos()[0] >= 800 and pygame.mouse.get_pos()[1] >= 550:
-                    if pygame.mouse.get_pos()[0] <= 1000 and pygame.mouse.get_pos()[1] <= 710:
-                        run = False
-                #if pygame.mouse.get_pos()[0] >= 800 and pygame.mouse.get_pos()[1] >= 550:
-                    #if pygame.mouse.get_pos()[0] <= 1000 and pygame.mouse.get_pos()[1] <= 710:
-                        #boss_hp = boss.hp_LevelOne
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if pygame.mouse.get_pos()[0] >= 300 and pygame.mouse.get_pos()[1] >= 550:
+                        if pygame.mouse.get_pos()[0] <= 500 and pygame.mouse.get_pos()[1] <= 710:
+                            menu = True
+                            run = False
+                    if pygame.mouse.get_pos()[0] >= 800 and pygame.mouse.get_pos()[1] >= 550:
+                        if pygame.mouse.get_pos()[0] <= 1000 and pygame.mouse.get_pos()[1] <= 710:
+                            run = False
+                            main = False
+                            menu = False
+                    #if pygame.mouse.get_pos()[0] >= 800 and pygame.mouse.get_pos()[1] >= 550:
+                        #if pygame.mouse.get_pos()[0] <= 1000 and pygame.mouse.get_pos()[1] <= 710:
+                            #boss_hp = boss.hp_LevelOne
                            
         elif player.loss == True:
             display.blit(lossscreen,(0,0))
@@ -272,16 +297,19 @@ while main:
             Bullet.Bullets = []
             start_button = pygame.draw.rect(display,(0,244,0),(300,550,200,60));
             quit_button = pygame.draw.rect(display,(244,0,0),(800,550,200,60));
-            retry()
+            to_menu()
             leave()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if pygame.mouse.get_pos()[0] >= 300 and pygame.mouse.get_pos()[1] >= 550:
-                    if pygame.mouse.get_pos()[0] <= 500 and pygame.mouse.get_pos()[1] <= 710:
-                        print("TBD")
-                if pygame.mouse.get_pos()[0] >= 800 and pygame.mouse.get_pos()[1] >= 550:
-                    if pygame.mouse.get_pos()[0] <= 1000 and pygame.mouse.get_pos()[1] <= 710:
-                        run = False
-
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if pygame.mouse.get_pos()[0] >= 300 and pygame.mouse.get_pos()[1] >= 550:
+                        if pygame.mouse.get_pos()[0] <= 500 and pygame.mouse.get_pos()[1] <= 710:
+                            menu = True                            
+                            run = False
+                    if pygame.mouse.get_pos()[0] >= 800 and pygame.mouse.get_pos()[1] >= 550:
+                        if pygame.mouse.get_pos()[0] <= 1000 and pygame.mouse.get_pos()[1] <= 710:
+                            run = False
+                            main = False
+                            menu = False
         keys = pygame.key.get_pressed()
         player.bullet_counter = player.bullet_limit * player.shoot_amount * player.bullet_amount
         for event in pygame.event.get():
