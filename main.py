@@ -9,6 +9,7 @@ background = pygame.image.load('background_space.png')
 
 winscreen = pygame.image.load('winscreen.jpg')
 lossscreen = pygame.image.load('lossscreen.jpg')
+menu_img = pygame.image.load('menu.jpg')
 
 pygame.mixer.music.load('Megalovania.mp3')
 pygame.mixer.music.play(-1)
@@ -57,6 +58,7 @@ def timer(timer):
 def boss_hp(boss_hp):
     text=smallfont.render("Boss hp:" +str(boss_hp), True, white)
     display.blit(text,[1095,60])
+    
 def player_hp(player_hp):
     text=smallfont.render("Your hp:" +str(player_hp), True, white)
     display.blit(text,[1095,90])
@@ -220,19 +222,23 @@ down = False
 move = False
 new_time = True
 run = True
-main= False
+main= True
+menu=True
 bonus = Bonus(display, randint(50, 1230), pygame.Surface((10, 10)))
 while main:
     while menu:
-        display.blit(menu,(0,0))
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if pygame.mouse.get_pos()[0] >= 12 and pygame.mouse.get_pos()[1] >= 166:
-                if pygame.mouse.get_pos()[0] <= 227 and pygame.mouse.get_pos()[1] <= 241:
-                    menu=False
-                    run=True
-            if pygame.mouse.get_pos()[0] >= 800 and pygame.mouse.get_pos()[1] >= 550:
-                if pygame.mouse.get_pos()[0] <= 1000 and pygame.mouse.get_pos()[1] <= 710:
-                    print("GG ne budet")
+        display.blit(menu_img,(0,0))
+        for event1 in pygame.event.get():
+            if event1.type == pygame.MOUSEBUTTONDOWN:
+                if pygame.mouse.get_pos()[0] >= 12 and pygame.mouse.get_pos()[1] >= 166:
+                    if pygame.mouse.get_pos()[0] <= 227 and pygame.mouse.get_pos()[1] <= 241:
+                        menu=False
+                        run=True
+                if pygame.mouse.get_pos()[0] >= 166 and pygame.mouse.get_pos()[1] >= 550:
+                    if pygame.mouse.get_pos()[0] <= 241 and pygame.mouse.get_pos()[1] <= 710:
+                        print("GG ne budet")
+            if event1.type == pygame.QUIT:
+                run = False
     while run:
         if player.win != True and player.loss != True:
             display.blit(background,(0,0))
@@ -428,6 +434,6 @@ while main:
             Bullet.Bullets.clear()
             Bullet.Player.clear()
         display.blit(player.sprite, player.instance)
-        pygame.display.update()
-        clock.tick(120)
-        pygame.quit()
+    pygame.display.update()
+    clock.tick(120)
+    pygame.quit()
