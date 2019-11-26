@@ -26,12 +26,16 @@ enemy1_sprite = pygame.image.load('vrag1.png')
 enemy2_sprite = pygame.image.load('vrag2.png')
 enemy3_sprite = pygame.image.load('vrag3.png')
 boss_sprite = pygame.image.load('boss.png')
+meteorite_sprite = pygame.image.load('meteorite.png') 
 
 inv_speed_levelOne = 5
 inv_speed_levelTwo = 8
 inv_speed_levelThree = 13
 inv_num_LevelOne = 7
 inv_num_LevelTwo = 11
+
+meteorite_speedX=2
+meteorite_speedY=2
 
 #boss_hp=0
 smallfont = pygame.font.SysFont("verdana",25)
@@ -122,7 +126,14 @@ class Player:
         self.instance.x = 3000
         self.instance.y = 0
 
-
+class Meteorite():
+    def __init__(self,display,x,y,sprite):
+        pygame.sprite.Sprite.__init__(self)
+        self.display = display
+        self.sprite = sprite
+        self.is_active = False
+        self.instance = self.sprite.get_rect(center = (x, y))
+        
 class EnemyLevelOne(Player):
     def __init__(self, display, x, y, sprite):
         Player.__init__(self, display, x, y, sprite)
@@ -227,6 +238,7 @@ run = True
 main= True
 menu=True
 bonus = Bonus(display, randint(50, 1230), pygame.Surface((10, 10)))
+meteorite = Meteorite(display, randint(50, 1230),50, meteorite_sprite)
 while main:
     while menu:
         display.blit(menu_img,(0,0))
@@ -447,7 +459,18 @@ while main:
             if bonus.instance.colliderect(player.instance):
                 bonus.function()
                 bonus = Bonus(display, randint(50, 1230), pygame.Surface((10, 10)))
-
+        display.blit(meteorite.sprite, meteorite.instance)
+        if not boss.solo_movement:
+                meteorite.instance.y+=meteorite_speedY
+                meteorite.instance.x+=meteorite_speedX
+                if meteorite.instance.y>620 :
+                    meteorite_speedY = -1
+                elif meteorite.instance.y<=0:
+                    meteorite_speedY = 1
+                if meteorite.instance.x >1220:
+                    meteorite_speedX = -1
+                elif meteorite.instance.x<0:
+                    meteorite_speedX =1
         if not boss.solo_movement and keys[pygame.K_LEFT] and player.instance.x > 0:
             player.instance.x -= player.speed_LevelOne
         if not boss.solo_movement and keys[pygame.K_RIGHT] and player.instance.x < 1280 - player.instance.width:
