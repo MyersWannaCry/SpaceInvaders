@@ -1,8 +1,9 @@
 import pygame
 from time import *
 from random import randint, choice
-
+from tkinter import *
 pygame.init()
+
 display = pygame.display.set_mode((1280, 670))
 pygame.display.set_caption('Space invaders')
 background = pygame.image.load('background_space.png')
@@ -13,7 +14,6 @@ menu_img = pygame.image.load('menu.jpg')
 
 pygame.mixer.music.load('Megalovania.mp3')
 pygame.mixer.music.play(-1)
-
 a=pygame.event.get()
 
 bullet_sprite_1 = pygame.image.load('bullet_1.png')
@@ -45,9 +45,17 @@ black = (0, 0, 0)
 points=0
 start_time=time()
 
-def to_menu():
-    text=bigfont.render("Menu" , True, black)
-    display.blit(text,[345,550])
+def creds():  
+    window = Tk()  
+    window.title("Creds")
+    window.geometry('400x250')
+    window.resizable(False, False)
+    window.call('wm', 'attributes', '.', '-topmost', '1')
+    lbl = Label(window, text="Вадим Чуков\n  Богдан Крят   \n         Игорь Ярошенко   \n      Диана Фатеева   \n          Михаил Микаэлян   \n      Влад Золотоноша",
+        font=("Arial Bold", 25))  
+    lbl.grid(column=0, row=0)  
+    window.mainloop()
+
     
 def leave():
     text=bigfont.render("Exit" , True, black)
@@ -220,7 +228,6 @@ class Bonus:
         player.bullet_limit += 3
 
 invaders = [[], [], []]
-#invader_speed = 5
 current_x = 5
 for i in range(inv_num_LevelOne):
     invaders[2].append(EnemyLevelThree(display, current_x, 5, enemy3_sprite))
@@ -262,7 +269,9 @@ while main:
                         print("TBD 1")
                 if pygame.mouse.get_pos()[0] >= 12 and pygame.mouse.get_pos()[1] >= 391:
                     if pygame.mouse.get_pos()[0] <= 210 and pygame.mouse.get_pos()[1] <= 466:
-                        print("TBD 2")
+                        creds()
+                                                
+                        
                 if pygame.mouse.get_pos()[0] >= 12 and pygame.mouse.get_pos()[1] >= 497:
                     if pygame.mouse.get_pos()[0] <= 180 and pygame.mouse.get_pos()[1] <= 572:
                         run = False
@@ -309,7 +318,7 @@ while main:
             Bullet.Bullets = []
             start_button = pygame.draw.rect(display,(0,244,0),(300,550,200,60));
             quit_button = pygame.draw.rect(display,(244,0,0),(800,550,200,60));
-            to_menu()
+            #to_menu()
             leave()
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -486,6 +495,10 @@ while main:
             Bullet.Bullets.clear()
             Bullet.Player.clear()
         display.blit(player.sprite, player.instance)
+        
     pygame.display.update()
     clock.tick(120)
+    
     pygame.quit()
+    
+
