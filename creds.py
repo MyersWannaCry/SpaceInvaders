@@ -3,7 +3,7 @@ from time import *
 from random import randint, choice
 from tkinter import *
 pygame.init()
-root = Tk()
+
 display = pygame.display.set_mode((1280, 670))
 pygame.display.set_caption('Space invaders')
 background = pygame.image.load('background_space.png')
