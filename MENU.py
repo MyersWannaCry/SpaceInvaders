@@ -1,7 +1,7 @@
 import pygame
 from time import *
 from random import randint, choice
-
+from tkinter import *
 pygame.init()
 display = pygame.display.set_mode((1280, 670))
 pygame.display.set_caption('Space invaders')
@@ -37,13 +37,29 @@ white = (255, 255, 255)
 black = (0, 0, 0)
 points=0
 
-def to_menu():
-    text=bigfont.render("Menu" , True, black)
-    display.blit(text,[345,550])
+def scoreboard():
+    t =  open('scoreboard.txt' , 'r')
+    window = Tk()
+    window.title("Scoreboard")
+    window.geometry("200x250")
+    L = Label(window, text = t.read(), font=("Arial Bold", 20) )
+    L.pack()
+    window.mainloop()
+
+def creds():  
+    window = Tk()  
+    window.title("Creds")
+    window.geometry('400x250')
+    window.resizable(False, False)
+    window.call('wm', 'attributes', '.', '-topmost', '1')
+    lbl = Label(window, text="Вадим Чуков\n  Богдан Крят   \n         Игорь Ярошенко   \n      Диана Фатеева   \n          Михаил Микаэлян   \n      Влад Золотоноша",
+        font=("Arial Bold", 25))  
+    lbl.grid(column=0, row=0)  
+    window.mainloop()
     
 def leave():
     text=bigfont.render("Exit" , True, black)
-    display.blit(text,[863,550])
+    display.blit(text,[600,550])
     
 def score(score):
     text=smallfont.render("Score:" +str(score), True, white)
@@ -89,20 +105,24 @@ class Player:
         self.bullet_counter = self.bullet_limit * self.bullet_amount
         self.hp = 3
         display.blit(self.sprite, self.instance)
+        
     def shoot_1(self):
         Bullet.Player.append(Bullet(self.display, self.instance.centerx, self.instance.y, bullet_sprite_2))
     def shoot_2(self):
         Bullet.Player.append(Bullet(self.display, self.instance.centerx, self.instance.y, bullet_sprite_5, -5, -1))
         Bullet.Player.append(Bullet(self.display, self.instance.centerx, self.instance.y, bullet_sprite_5, -5, 1))
+        
     def shoot_3(self):
         Bullet.Player.append(Bullet(self.display, self.instance.centerx, self.instance.y, bullet_sprite_5, -5, -1))
         Bullet.Player.append(Bullet(self.display, self.instance.centerx, self.instance.y, bullet_sprite_5))
         Bullet.Player.append(Bullet(self.display, self.instance.centerx, self.instance.y, bullet_sprite_5, -5, 1))
+        
     def shoot_4(self):
         Bullet.Player.append(Bullet(self.display, self.instance.centerx, self.instance.y, bullet_sprite_5, -5, -2))
         Bullet.Player.append(Bullet(self.display, self.instance.centerx, self.instance.y, bullet_sprite_5, -5, -1))
         Bullet.Player.append(Bullet(self.display, self.instance.centerx, self.instance.y, bullet_sprite_5, -5, 1))
         Bullet.Player.append(Bullet(self.display, self.instance.centerx, self.instance.y, bullet_sprite_5, -5, 2))
+        
     def shoot_5(self):
         Bullet.Player.append(Bullet(self.display, self.instance.centerx, self.instance.y, bullet_sprite_5, -5, -2))
         Bullet.Player.append(Bullet(self.display, self.instance.centerx, self.instance.y, bullet_sprite_5, -5, -1))
@@ -208,7 +228,9 @@ class Bonus:
         player.speed -= 5
     def change_direction(self, player):
         player.normal_moving = not player.normal_moving
-
+    def cleanup():
+        self.instance.x = 3000
+        self.instance.y = 2000
 
 invaders = [[], [], []]
 invader_speed = 5
@@ -283,10 +305,10 @@ while main:
                         run = True
                 if pygame.mouse.get_pos()[0] >= 12 and pygame.mouse.get_pos()[1] >= 285:
                     if pygame.mouse.get_pos()[0] <= 355 and pygame.mouse.get_pos()[1] <= 360:
-                        print("TBD 1")
+                        scoreboard()
                 if pygame.mouse.get_pos()[0] >= 12 and pygame.mouse.get_pos()[1] >= 391:
                     if pygame.mouse.get_pos()[0] <= 210 and pygame.mouse.get_pos()[1] <= 466:
-                        print("TBD 2")
+                        creds()
                 if pygame.mouse.get_pos()[0] >= 12 and pygame.mouse.get_pos()[1] >= 497:
                     if pygame.mouse.get_pos()[0] <= 180 and pygame.mouse.get_pos()[1] <= 572:
                         run = False
@@ -304,17 +326,11 @@ while main:
             boss.cleanup()
             invaders = []
             Bullet.Bullets = []
-            start_button = pygame.draw.rect(display,(0,244,0),(300,550,200,60));
-            quit_button = pygame.draw.rect(display,(244,0,0),(800,550,200,60));
-            to_menu()
+            quit_button = pygame.draw.rect(display,(244,0,0),(300,550,700,60));
             leave()
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if pygame.mouse.get_pos()[0] >= 300 and pygame.mouse.get_pos()[1] >= 550:
-                        if pygame.mouse.get_pos()[0] <= 500 and pygame.mouse.get_pos()[1] <= 710:
-                            menu = True
-                            run = False
-                    if pygame.mouse.get_pos()[0] >= 800 and pygame.mouse.get_pos()[1] >= 550:
                         if pygame.mouse.get_pos()[0] <= 1000 and pygame.mouse.get_pos()[1] <= 710:
                             run = False
                             main = False
@@ -329,17 +345,11 @@ while main:
             boss.cleanup()
             invaders=[]
             Bullet.Bullets = []
-            start_button = pygame.draw.rect(display,(0,244,0),(300,550,200,60));
-            quit_button = pygame.draw.rect(display,(244,0,0),(800,550,200,60));
-            to_menu()
+            quit_button = pygame.draw.rect(display,(244,0,0),(300,550,700,60));
             leave()
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if pygame.mouse.get_pos()[0] >= 300 and pygame.mouse.get_pos()[1] >= 550:
-                        if pygame.mouse.get_pos()[0] <= 500 and pygame.mouse.get_pos()[1] <= 710:
-                            menu = True                            
-                            run = False
-                    if pygame.mouse.get_pos()[0] >= 800 and pygame.mouse.get_pos()[1] >= 550:
                         if pygame.mouse.get_pos()[0] <= 1000 and pygame.mouse.get_pos()[1] <= 710:
                             run = False
                             main = False
