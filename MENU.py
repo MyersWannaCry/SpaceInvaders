@@ -15,7 +15,6 @@ pygame.mixer.music.load('Megalovania.mp3')
 
 a=pygame.event.get()
 
-bullet_sprite_1 = pygame.image.load('bullet_1.png')
 bullet_sprite_2 = pygame.image.load('bullet_2.png')
 bullet_sprite_3 = pygame.image.load('bullet_in.png')
 bullet_sprite_4 = pygame.image.load('Bullet_boss.png')
